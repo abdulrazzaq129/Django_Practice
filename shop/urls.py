@@ -9,6 +9,6 @@ urlpatterns = [
     re_path(r'^article/(?P<year>[0-9]{4})/$', views.article, name='article'),
     path('student/', views.student_list, name='student_list '),
     path('student_edit/<int:id>/', views.student_edit, name='student_edit '),
-
-
+    path('partial_update/<int:id>/', views.partial_update, name='partial_update '),
+    path('age_filter/', views.age_filter, name='age_filter '),
 ]
