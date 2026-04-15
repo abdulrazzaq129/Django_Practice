@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Student
 from .serializers import StudentSerializer
-
+from django.contrib.auth.models import User
 def home(request):
     return render(request,'home.html')
 
@@ -58,6 +58,28 @@ def student_edit(request, id):
         student.delete()
         return Response(f"Deleted student with id {id} with name {student.name}")
 
+@api_view(['POST'])
+def register(request):
+    username = request.data.get('username')
+    password = request.data.get('password')
+
+    user = User.objects.create_user(username=username,password=password)
+    user.is_superuser = True
+    user.email = username
+    user.save()
+    return Response({"message":"User created"})
+
+from django.contrib.auth import authenticate
+
+@api_view(['POST'])
+def login(request):
+    username = request.data.get('username')
+    password = request.data.get('password')
+
+    user = authenticate(username=username,password=password)
+    if user is not None:
+        return Response({"message":"User authenticated"})
+    return Response({"message":"User not authenticated"})
 @api_view(['PATCH'])
 def partial_update(request, id):
     try:
