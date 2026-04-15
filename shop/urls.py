@@ -11,6 +11,4 @@ urlpatterns = [
     path('student_edit/<int:id>/', views.student_edit, name='student_edit '),
     path('partial_update/<int:id>/', views.partial_update, name='partial_update '),
     path('age_filter/', views.age_filter, name='age_filter '),
-
-
 ]
