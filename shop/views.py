@@ -43,8 +43,8 @@ def student_list(request):
 def student_edit(request, id):
     try:
         student = Student.objects.get(id=id)
-    except:
-        return Response(status = 404)
+    except Student.DoesNotExist:
+        return Response({"error":"Student does not exist"},status=404)
     if request.method == 'GET':
         serializer = StudentSerializer(student)
         return Response(serializer.data)
@@ -80,3 +80,24 @@ def login(request):
     if user is not None:
         return Response({"message":"User authenticated"})
     return Response({"message":"User not authenticated"})
+@api_view(['PATCH'])
+def partial_update(request, id):
+    try:
+        student = Student.objects.get(id=id)
+    except Student.DoesNotExist:
+        return Response({"error":"Student does not exist"},status=404)
+    if request.method == 'PATCH':
+        serializers = StudentSerializer(student, data=request.data, partial = True)
+        if serializers.is_valid():
+            serializers.save()
+            return Response(serializers.data)
+        return Response(serializers.errors)
+    
+@api_view(['GET'])
+def age_filter(request):
+    student = Student.objects.filter(age__gt=20)
+    serializers = StudentSerializer(student, many=True)
+    return Response(serializers.data)
+    
+
+
